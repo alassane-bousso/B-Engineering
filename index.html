@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="B-Engineering – Bureau d'études structures à Dakar. Calculs béton armé, acier, génie civil, conformité Eurocodes et exigences clients. Expertise terrain France & Sénégal.">
+<title>B-Engineering — Expertise en Calculs de Structures | Dakar</title>
+<style>
+  :root {
+    --navy: #0a0f1e;
+    --navy2: #0e1628;
+    --navy3: #111d35;
+    --orange: #e8621a;
+    --orange2: #f07833;
+    --electric: #1a9de8;
+    --electric2: #3ab5f5;
+    --white: #f0f4ff;
+    --grey: #a0bbdf;
+    --border: rgba(26,157,232,0.22);
+    --grid: rgba(26,157,232,0.07);
+    --transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  /* ===== TYPOGRAPHY & FALLBACK ===== */
+  @font-face {
+    font-family: 'Bebas Neue';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Bebas Neue'), local('BebasNeueRegular'), url('https://fonts.gstatic.com/s/bebasneue/v9/JTUSjIg69CK48gW7PXooxW5rygbi49c.woff2') format('woff2');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'DM Sans';
+    font-style: normal;
+    font-weight: 300 700;
+    src: local('DM Sans'), url('https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriCZOIHQ.woff2') format('woff2');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400 700;
+    src: local('JetBrains Mono'), url('https://fonts.gstatic.com/s/jetbrainsmono/v13/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTN1OVgaY.woff2') format('woff2');
+    font-display: swap;
+  }
+
+  /* ===== BACKGROUND & UTILITIES ===== */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: 
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .bg-noise {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 180px;
+  }
+
+  section, footer { position: relative; z-index: 2; }
+
+  /* ===== CURSER (desktop only, hidden on touch & print) ===== */
+  .cursor-dot, .cursor-ring { display: none; }
+  body:not(.touch-device) .cursor-dot,
+  body:not(.touch-device) .cursor-ring { display: block; }
+
+  .cursor-dot {
+    width: 8px; height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+    position: fixed; pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.08s linear;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 34px; height: 34px;
+    border: 1.5px solid var(--electric);
+    border-radius: 50%;
+    position: fixed; pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: width 0.2s, height 0.2s, border-color 0.2s;
+    opacity: 0.75;
+  }
+
+  /* ===== REVEAL ANIMATION (keep for screen, but print ignores) ===== */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.1); will-change: opacity, transform; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===== BUTTONS & LINKS ===== */
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.85rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none; background: none;
+    transition: var(--transition);
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--orange); color: #fff;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .btn-primary:hover, .btn-primary:focus-visible { background: var(--orange2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,98,26,0.35); outline: 2px solid var(--electric); outline-offset: 2px; }
+  .btn-outline {
+    background: transparent; color: var(--electric2);
+    border: 1px solid var(--electric);
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .btn-outline:hover, .btn-outline:focus-visible { background: rgba(26,157,232,0.12); transform: translateY(-2px); outline: 2px solid var(--electric2); outline-offset: 2px; }
+
+  /* ===== RESPONSIVE LAYOUT GLOBALS ===== */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 0 5vw;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HERO SECTION */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 10vh 5vw 8vh;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; right: -15vw; top: -10vh;
+    width: 80vw; height: 70vh;
+    background: radial-gradient(ellipse, rgba(232,98,26,0.1) 0%, rgba(26,157,232,0.05) 50%, transparent 80%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--electric2);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: flex; flex-wrap: wrap;
+    align-items: center; gap: 1rem;
+  }
+  .hero-tag .dot {
+    width: 5px; height: 5px; background: var(--orange); border-radius: 50%; display: inline-block;
+    animation: blink 1.4s infinite;
+  }
+  .hero-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(58px, 13vw, 150px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--white);
+  }
+  .hero-logo .orange-b {
+    color: var(--orange);
+  }
+  .hero-logo .main-line {
+    font-size: clamp(58px, 13vw, 150px);
+    font-family: 'Bebas Neue', sans-serif;
+    display: block;
+  }
+  .hero-logo .sub-line {
+    font-size: clamp(16px, 3.5vw, 36px);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--grey);
+    margin-top: 0.5rem;
+  }
+  .hero-sub {
+    font-size: clamp(14px, 4vw, 20px);
+    font-weight: 300;
+    color: var(--grey);
+    margin-top: 1.8rem;
+    max-width: 580px;
+    line-height: 1.6;
+  }
+  .hero-cta { margin-top: 2.5rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+  .hero-metrics {
+    margin-top: 4rem;
+    display: flex;
+    gap: 2rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  .metric { text-align: left; }
+  .metric-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--white); line-height: 1; }
+  .metric-num span { color: var(--orange); font-size: 28px; }
+  .metric-label { font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.15em; color: var(--grey); text-transform: uppercase; margin-top: 5px; }
+
+  /* ===== SECTION GENERIC ===== */
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.3em; color: var(--electric2);
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem;
+  }
+  .section-label::before { content: ''; width: 28px; height: 1px; background: var(--electric); }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(34px, 8vw, 72px);
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+  }
+
+  /* ABOUT */
+  .about { padding: 8vh 5vw; display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: center; }
+  @media (min-width: 800px) { .about { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+  .about-visual { position: relative; min-height: 380px; display: flex; justify-content: center; align-items: center; }
+  .blueprint-box { position: absolute; border: 1px solid var(--border); background: var(--navy2); opacity: 0.7; }
+  .bb1 { width: 220px; height: 280px; top: 0; left: 0; }
+  .bb2 { width: 170px; height: 170px; bottom: 0; right: 0; border-color: rgba(232,98,26,0.3); }
+  .about-card {
+    position: relative;
+    padding: 1.5rem;
+    background: linear-gradient(145deg, var(--navy3), var(--navy2));
+    border: 1px solid var(--border);
+    width: 260px;
+    z-index: 3;
+    margin: 0 auto;
+  }
+  .about-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, var(--orange), var(--electric)); }
+  .ac-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.3em; color: var(--orange); margin-bottom: 0.7rem; }
+  .ac-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; margin-bottom: 0.5rem; }
+  .ac-desc { font-size: 11px; color: var(--grey); }
+  .about-text p { color: var(--grey); line-height: 1.7; font-size: 15px; font-weight: 300; margin-bottom: 1.2rem; }
+  .norms { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1.5rem; }
+  .norm-badge {
+    padding: 0.3rem 0.8rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.05em;
+    border: 1px solid var(--border); color: var(--electric2); background: rgba(26,157,232,0.02);
+  }
+
+  /* SERVICES GRID */
+  .services { padding: 8vh 5vw; background: var(--navy2); position: relative; }
+  .services-header { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; margin-bottom: 3rem; gap: 1rem; }
+  .services-num { font-family: 'Bebas Neue', sans-serif; font-size: 80px; color: rgba(255,255,255,0.03); line-height: 1; }
+  .services-grid { display: grid; grid-template-columns: 1fr; gap: 2px; background: var(--border); }
+  @media (min-width: 640px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+  .service-card {
+    background: var(--navy);
+    padding: 2rem;
+    transition: var(--transition);
+    cursor: pointer;
+  }
+  .service-card:hover { background: var(--navy3); transform: translateY(-3px); }
+  .service-icon svg { width: 30px; height: 30px; stroke: var(--electric2); stroke-width: 1.4; margin-bottom: 1rem; }
+  .service-num { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--orange); letter-spacing: 0.2em; margin-bottom: 0.5rem; }
+  .service-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; margin-bottom: 0.8rem; }
+  .service-desc { font-size: 13px; color: var(--grey); line-height: 1.7; font-weight: 300; }
+  .service-tags { margin-top: 1.2rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .stag { font-family: 'JetBrains Mono', monospace; font-size: 8px; padding: 3px 8px; background: rgba(26,157,232,0.1); border: 1px solid rgba(26,157,232,0.2); color: var(--electric2); text-transform: uppercase; }
+
+  /* METHODOLOGY */
+  .methodology { padding: 8vh 5vw; }
+  .meth-header { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 3rem; }
+  @media (min-width: 800px) { .meth-header { grid-template-columns: 1fr 1fr; align-items: end; gap: 2rem; } }
+  .meth-desc { color: var(--grey); line-height: 1.7; font-size: 14px; }
+  .steps { display: grid; grid-template-columns: 1fr; gap: 1rem; position: relative; }
+  @media (min-width: 640px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .steps { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
+  .step { background: var(--navy2); padding: 1.6rem; transition: var(--transition); }
+  .step:hover { transform: translateY(-3px); background: var(--navy3); }
+  .step-num { width: 44px; height: 44px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--orange); margin-bottom: 1rem; background: var(--navy); }
+  .step-title { font-weight: 700; font-size: 15px; margin-bottom: 0.5rem; }
+  .step-desc { font-size: 12px; color: var(--grey); line-height: 1.6; }
+
+  /* SOFTWARE */
+  .software { padding: 8vh 5vw; background: var(--navy3); position: relative; }
+  .sw-grid { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+  .sw-item { flex: 1 1 170px; padding: 1.2rem; background: var(--navy); border: 1px solid var(--border); transition: var(--transition); display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .sw-item:hover { border-color: var(--electric); transform: translateY(-2px); background: var(--navy2); }
+  .sw-icon svg { width: 26px; height: 26px; fill: var(--electric2); stroke: none; }
+  .sw-name { font-weight: 600; font-size: 13px; }
+
+  /* TEAM */
+  .team { padding: 8vh 5vw; display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
+  @media (min-width: 800px) { .team { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+  .team-grid { display: flex; flex-direction: column; gap: 1.5rem; }
+  .team-card { padding: 1.5rem; background: var(--navy2); border: 1px solid var(--border); display: grid; grid-template-columns: 52px 1fr; gap: 1rem; transition: var(--transition); }
+  .team-card:hover { border-color: var(--orange); transform: translateX(4px); }
+  .team-avatar { width: 52px; height: 52px; background: linear-gradient(135deg, var(--orange), var(--electric)); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: white; }
+  .team-name { font-weight: 700; font-size: 15px; }
+  .team-title { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: var(--orange); margin-bottom: 0.4rem; }
+  .team-desc { font-size: 12px; color: var(--grey); line-height: 1.5; }
+  .team-partners { margin-top: 2rem; padding: 1.2rem; border: 1px solid var(--border); background: var(--navy2); }
+
+  /* CONTACT */
+  .contact { padding: 8vh 5vw; background: var(--navy2); position: relative; }
+  .contact-inner { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
+  @media (min-width: 800px) { .contact-inner { grid-template-columns: 1.2fr 1fr; gap: 4rem; } }
+  .contact-info { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+  .ci-item { display: flex; align-items: center; gap: 1rem; padding: 0.8rem; background: var(--navy); border: 1px solid var(--border); }
+  .ci-icon { width: 36px; height: 36px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--orange); flex-shrink: 0; }
+  .ci-label { font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.2em; color: var(--grey); text-transform: uppercase; }
+  .ci-value { font-size: 13px; color: var(--white); font-weight: 500; word-break: break-word; }
+  .ci-value a { color: inherit; text-decoration: none; }
+  .ci-value a:hover { color: var(--electric2); }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-group label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--electric2); margin-bottom: 0.4rem; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 0.7rem 1rem; background: var(--navy); border: 1px solid var(--border);
+    color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; transition: border 0.2s;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--electric); background: var(--navy3); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* FOOTER */
+  footer { padding: 2rem 5vw; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 1rem; align-items: center; text-align: center; }
+  @media (min-width: 640px) { footer { flex-direction: row; justify-content: space-between; text-align: left; } }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; }
+  .footer-logo span { color: var(--orange); }
+  .footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--grey); letter-spacing: 0.1em; }
+  .footer-links { display: flex; gap: 1.2rem; }
+  .footer-links a { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; color: var(--grey); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover, .footer-links a:focus-visible { color: var(--orange); outline: 1px solid var(--orange); }
+
+  /* KEYFRAMES */
+  @keyframes blink { 0%,100%{ opacity:1; } 50%{ opacity:0.3; } }
+
+  /* ===== PRINT STYLES (A4 landscape) ===== */
+  @media print {
+    @page {
+      size: A4 landscape;
+      margin: 1.2cm;
+    }
+    body {
+      background: white;
+      color: black;
+      cursor: default;
+    }
+    .bg-grid, .bg-noise, .cursor-dot, .cursor-ring, .hero::before, .services::before, .contact::before, .hero-scroll, .divider {
+      display: none !important;
+    }
+    .hero, .about, .services, .methodology, .software, .team, .contact, footer {
+      background: white !important;
+      color: black !important;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .hero-logo .main-line, .hero-logo .sub-line {
+      color: black !important;
+    }
+    .hero-logo .orange-b {
+      color: #e8621a !important;
+    }
+    .section-label, .section-title, .hero-tag, .hero-sub, .metric-num, .metric-label {
+      color: black !important;
+    }
+    .hero-tag {
+      color: #1a9de8 !important;
+    }
+    .btn, .btn-primary, .btn-outline {
+      border: 1px solid #aaa !important;
+      background: #eee !important;
+      color: black !important;
+      clip-path: none !important;
+      padding: 0.4rem 1rem;
+    }
+    .service-card, .step, .sw-item, .team-card, .ci-item, .about-card {
+      background: #f5f5f5 !important;
+      border: 1px solid #ccc !important;
+      color: black !important;
+    }
+    .service-desc, .step-desc, .team-desc, .ci-value, .about-text p {
+      color: #333 !important;
+    }
+    .stag, .norm-badge {
+      background: #eaeaea !important;
+      border-color: #aaa !important;
+      color: #222 !important;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      background: white !important;
+      border: 1px solid #aaa !important;
+      color: black !important;
+    }
+    a {
+      text-decoration: none;
+      color: black !important;
+    }
+    .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    footer {
+      border-top: 1px solid #ccc;
+    }
+    .hero-metrics {
+      margin-top: 1rem;
+    }
+    .hero-cta {
+      display: none; /* hide buttons in print */
+    }
+  }
+
+  /* ===== SITE WEB : navigation & interactions ===== */
+  html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+  .cursor-dot, .cursor-ring { display: none !important; }
+  .nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: calc(0.8rem + env(safe-area-inset-top, 0px)) 1.25rem 0.8rem; background: rgba(10,15,30,0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-logo { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 26px; letter-spacing: 0.04em; color: var(--white); text-decoration: none; }
+  .nav-logo span { color: var(--orange); }
+  .nav-links { display: none; list-style: none; gap: 1.6rem; align-items: center; }
+  .nav-links a { color: var(--grey); text-decoration: none; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.4rem 0; border-bottom: 2px solid transparent; transition: var(--transition); }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); border-bottom-color: var(--orange); }
+  .nav-links .nav-cta { background: var(--orange); color: #fff; padding: 0.6rem 1.2rem; border: none; }
+  .nav-links .nav-cta:hover { background: var(--orange2); }
+  .burger { display: flex; flex-direction: column; gap: 5px; background: none; border: 1px solid var(--border); padding: 10px; cursor: pointer; }
+  .burger span { width: 20px; height: 2px; background: var(--white); transition: var(--transition); }
+  .burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-links.open { display: flex; flex-direction: column; align-items: stretch; gap: 0; position: absolute; top: 100%; left: 0; right: 0; background: var(--navy2); border-bottom: 1px solid var(--border); padding: 0.5rem 1.25rem 1rem; }
+  .nav-links.open a { display: block; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
+  .nav-links.open .nav-cta { margin-top: 0.8rem; text-align: center; }
+  @media (min-width: 900px) { .nav { padding-left: 3rem; padding-right: 3rem; } .nav-links { display: flex; } .burger { display: none; } }
+  .progress { position: absolute; left: 0; bottom: -1px; height: 2px; width: 0; background: linear-gradient(90deg, var(--orange), var(--electric2)); }
+  .fab { position: fixed; right: calc(1rem + env(safe-area-inset-right, 0px)); z-index: 90; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; text-decoration: none; box-shadow: 0 6px 20px rgba(0,0,0,0.4); transition: var(--transition); }
+  .fab:hover { transform: translateY(-3px); }
+  .fab svg { width: 26px; height: 26px; }
+  .fab-wa { bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); background: #25d366; }
+  .fab-top { bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); width: 44px; height: 44px; background: var(--navy3); border: 1px solid var(--border); opacity: 0; pointer-events: none; }
+  .fab-top.show { opacity: 1; pointer-events: auto; }
+  .form-actions { display: flex; flex-direction: column; gap: 0.7rem; }
+  .btn-wa { background: #25d366; color: #05210f; width: 100%; justify-content: center; }
+  .btn-wa:hover { filter: brightness(1.08); transform: translateY(-2px); }
+  .form-status { font-size: 13px; min-height: 1.2em; }
+  .form-status.err { color: #ff8a65; }
+  .form-status.ok { color: #6ee7a7; }
+  [hidden] { display: none !important; }
+  .mail-fallback { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; padding: 0.9rem; border: 1px solid var(--border); background: var(--navy); }
+  .mail-fallback p { width: 100%; font-size: 13px; color: var(--grey); }
+  .mail-fallback .btn { padding: 0.6rem 1rem; font-size: 11px; }
+  input.invalid, textarea.invalid { border-color: #ff8a65 !important; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--electric2); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .reveal { transition: none; } }
+  @media print { .nav, .fab, .form-actions .btn-wa { display: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="bg-grid"></div>
+<div class="bg-noise"></div>
+
+<header class="nav" id="top">
+  <a href="#top" class="nav-logo"><span>B</span>-Engineering</a>
+  <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#methodology">Méthode</a></li>
+    <li><a href="#software">Outils</a></li>
+    <li><a href="#team">Équipe</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" aria-label="Présentation B-Engineering">
+    <div class="hero-tag">
+      <span><span class="dot"></span> Bureau d'études · Dakar, Sénégal</span>
+    </div>
+    <div class="hero-logo">
+      <div class="main-line"><span class="orange-b">B</span>-Engineering <span style="font-size: 0.5em; letter-spacing: 0;">(</span><span class="orange-b">B</span><span style="font-size: 0.5em;">-Eng</span><span style="font-size: 0.5em;">)</span></div>
+      <div class="sub-line">INGÉNIERIE STRUCTURALE</div>
+    </div>
+    <p class="hero-sub">
+      <strong>Calculs de structures</strong> de précision pour bâtiments et infrastructures.<br>
+      Béton armé · Acier · Génie civil — Conformité Eurocodes et exigences clients.
+    </p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn btn-primary">Nous contacter</a>
+      <a href="#services" class="btn btn-outline">Nos prestations</a>
+    </div>
+    <div class="hero-metrics">
+      <div class="metric"><div class="metric-num">2<span>+</span></div><div class="metric-label">Continents d'expérience</div></div>
+      <div class="metric"><div class="metric-num">100<span>%</span></div><div class="metric-label">Conformité réglementaire</div></div>
+      <div class="metric"><div class="metric-num">5M<span>₣</span></div><div class="metric-label">Capital CFA</div></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about" aria-labelledby="about-title">
+    <div class="about-visual">
+      <div class="blueprint-box bb1"></div>
+      <div class="blueprint-box bb2"></div>
+      <div class="about-card">
+        <div class="ac-label">// À propos</div>
+        <div class="ac-title">Ingénierie<br>de haut niveau</div>
+        <div class="ac-desc">Expertise terrain France & Sénégal, au service des projets locaux.</div>
+      </div>
+    </div>
+    <div class="about-text">
+      <div class="section-label reveal">À propos de B-Engineering</div>
+      <h2 id="about-title" class="section-title reveal">Une ingénierie<br>dédiée aux<br><span style="color:var(--orange)">structures</span></h2>
+      <p class="reveal"><strong>B-Engineering</strong> est un bureau d'études techniques basé à Dakar, porté par une ambition claire : offrir une ingénierie de structures de haut niveau au Sénégal.</p>
+      <p class="reveal">Jeune par son immatriculation, B-Engineering s’appuie en réalité sur des fondateurs au parcours d’excellence : formation d’ingénieur entre l’École Supérieure Polytechnique de Dakar, l’Université Cheikh Anta Diop et l’École Centrale de Lyon, complétée par une expérience terrain solide, acquise en France et au Sénégal.</p>
+      <div class="norms reveal">
+        <span class="norm-badge">Eurocodes</span>
+        <span class="norm-badge">RCC-CW</span>
+        <span class="norm-badge">RCC-M</span>
+        <span class="norm-badge">Parasismique</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SERVICES -->
+  <section class="services" id="services" aria-labelledby="services-title">
+    <div class="services-header">
+      <div><div class="section-label reveal">Ce que nous faisons</div><h2 id="services-title" class="section-title reveal">Nos<br><span style="color:var(--orange)">prestations</span></h2></div>
+      <div class="services-num reveal">03</div>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div><div class="service-num">01 —</div><div class="service-title">Calculs de Structures</div><div class="service-desc">Modélisation 3D éléments finis, dimensionnement béton armé et acier, notes de calcul détaillées et justifiées.</div><div class="service-tags"><span class="stag">Béton Armé</span><span class="stag">Acier</span><span class="stag">EF 3D</span></div></div>
+      <div class="service-card reveal"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 20h20M4 20V10l8-8 8 8v10"/><path d="M10 20v-6h4v6"/></svg></div><div class="service-num">02 —</div><div class="service-title">Plans & Dossiers d’exécution</div><div class="service-desc">De l’APS au DCE : plans de ferraillage et de charpente, détails constructifs, avec traçabilité rigoureuse.</div><div class="service-tags"><span class="stag">APS/APD</span><span class="stag">DCE</span><span class="stag">Plans EXE</span></div></div>
+      <div class="service-card reveal"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><div class="service-num">03 —</div><div class="service-title">Expertise & Diagnostic</div><div class="service-desc">Diagnostic d’ouvrages existants, expertise structurelle, contrôle de conformité réglementaire.</div><div class="service-tags"><span class="stag">Diagnostic</span><span class="stag">Conformité</span></div></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- METHODOLOGY -->
+  <section class="methodology" id="methodology" aria-labelledby="method-title">
+    <div class="meth-header"><div><div class="section-label reveal">Comment nous travaillons</div><h2 id="method-title" class="section-title reveal">Notre <span style="color:var(--electric2)">méthodo</span><span style="color:var(--orange)">logie</span></h2></div><p class="meth-desc reveal">Processus structuré en quatre phases garantissant rigueur et conformité.</p></div>
+    <div class="steps"><div class="step reveal"><div class="step-num">01</div><div class="step-title">Analyse & Hypothèses</div><div class="step-desc">Recueil données architecturales, géotechniques, charges environnementales.</div></div><div class="step reveal"><div class="step-num">02</div><div class="step-title">Modélisation & Calculs</div><div class="step-desc">Modèle numérique 3D, vérifications réglementaires, optimisation sections.</div></div><div class="step reveal"><div class="step-num">03</div><div class="step-title">Rapport & Plans</div><div class="step-desc">Note de calcul, plans d'exécution et détails d'armatures.</div></div><div class="step reveal"><div class="step-num">04</div><div class="step-title">Accompagnement</div><div class="step-desc">Assistance technique au chantier, contrôle de conformité.</div></div></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SOFTWARE -->
+  <section class="software" id="software" aria-label="Logiciels maîtrisés">
+    <div class="sw-header"><div class="section-label reveal">Outils & Logiciels</div><h2 class="section-title reveal">Simulation <span style="color:var(--electric2)">avancée</span></h2></div>
+    <div class="sw-grid">
+      <div class="sw-item reveal"><div class="sw-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div><div class="sw-name">Robot Structural</div></div></div>
+      <div class="sw-item reveal"><div class="sw-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg></div><div><div class="sw-name">RSTAB / RFEM</div></div></div>
+      <div class="sw-item reveal"><div class="sw-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div><div class="sw-name">Autocad / Archicad / Revit</div></div></div>
+      <div class="sw-item reveal"><div class="sw-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div><div class="sw-name">Graitec Advance</div></div></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- TEAM -->
+  <section class="team" id="team" aria-labelledby="team-title">
+    <div><div class="section-label reveal">Notre équipe</div><h2 id="team-title" class="section-title reveal">Des experts<br><span style="color:var(--orange)">engagés</span></h2><p class="reveal" style="margin-top:1.5rem; color:var(--grey);">L'équipe dirigeante combine expertise en génie civil, modélisation BIM et expérience terrain France & Sénégal.</p><div class="team-partners reveal"><div class="tp-label" style="font-family:'JetBrains Mono'; font-size:9px;">// Réseau de partenaires</div><p class="tp-text" style="font-size:12px;">B-Engineering s'appuie sur un réseau de partenaires géotechniciens et formateurs qualifiés.</p></div></div>
+    <div class="team-grid">
+      <div class="team-card reveal"><div class="team-avatar">AB</div><div><div class="team-name">M. Alassane BOUSSO</div><div class="team-title">Gérant — Fondateur</div><div class="team-desc">Ingénieur génie civil, spécialiste en <strong>calcul de structures et pilotage de conception en génie civil</strong>. Expérience terrain en France et au Sénégal, orientée ouvrages industriels, barrages et structures nucléaires.</div></div></div>
+      <div class="team-card reveal"><div class="team-avatar">HS</div><div><div class="team-name">M. Hamidou SY</div><div class="team-title">Co-Gérant — Fondateur</div><div class="team-desc">Ingénieur bâtiment, expert en <strong>conception et calcul de bâtiments résidentiels, matériaux en terre</strong> et modélisation BIM pour une coordination multidisciplinaire optimale.</div></div></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="contact-inner">
+      <div><div class="section-label reveal">Travaillons ensemble</div><h2 id="contact-title" class="section-title reveal">Démarrons<br>votre <span style="color:var(--orange)">projet</span></h2><p class="reveal">Maîtres d'ouvrage, architectes, entreprises — B-Engineering est votre partenaire technique.</p>
+      <div class="contact-info reveal">
+        <div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-label">Email</div><div class="ci-value"><a href="mailto:alassane.bousso@yahoo.com">alassane.bousso@yahoo.com</a></div></div></div>
+        <div class="ci-item"><div class="ci-icon">💬</div><div><div class="ci-label">WhatsApp</div><div class="ci-value"><a href="https://wa.me/33636383378" target="_blank" rel="noopener">+33 6 36 38 33 78</a></div></div></div>
+        <div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-label">Téléphone (Sénégal)</div><div class="ci-value">+221 77 842 52 51</div></div></div>
+        <div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Adresse</div><div class="ci-value">Parcelles Assainies 5085 — Dakar, Sénégal</div></div></div>
+      </div></div>
+      <form class="contact-form reveal" id="contactForm" action="#" method="post" novalidate>
+        <div class="form-row"><div class="form-group"><label for="prenom">Prénom</label><input type="text" id="prenom" name="prenom" placeholder="Votre prénom"></div><div class="form-group"><label for="nom">Nom</label><input type="text" id="nom" name="nom" placeholder="Votre nom"></div></div>
+        <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="votre@email.com"></div>
+        <div class="form-group"><label for="projet">Type de projet</label><select id="projet" name="projet"><option value="">Sélectionner un domaine</option><option>Bâtiment résidentiel</option><option>Bâtiment industriel</option><option>Infrastructure / Génie civil</option><option>Diagnostic / Expertise</option></select></div>
+        <div class="form-group"><label for="message">Description du projet</label><textarea id="message" name="message" rows="3" placeholder="Décrivez brièvement votre projet..."></textarea></div>
+        <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+        <div class="mail-fallback" id="mailFallback" hidden></div>
+        <div class="form-actions"><button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Envoyer par email</button><button type="button" class="btn btn-wa" id="waBtn">Envoyer par WhatsApp</button></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer><div class="footer-logo"><span>B</span>-Engineering</div><div class="footer-copy">© 2026 B-Engineering · SARL capital 5 000 000 F CFA<br>Calculs structures — Conformité — Performance</div><div class="footer-links"><a href="#services">Services</a><a href="#methodology">Méthode</a><a href="#team">Équipe</a><a href="#contact">Contact</a></div></footer>
+
+<a href="https://wa.me/33636383378" class="fab fab-wa" target="_blank" rel="noopener" aria-label="Nous écrire sur WhatsApp"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.300 1.200-1.800 1.200-.5.100-1 .2-3.200-.7-2.700-1.100-4.400-3.800-4.500-4-.1-.2-1.100-1.400-1.100-2.700s.7-1.900.9-2.200c.2-.2.5-.3.700-.3h.5c.2 0 .4 0 .6.500.2.600.8 2 .9 2.100.1.100.1.300 0 .5-.1.200-.2.300-.3.500l-.4.500c-.1.100-.3.300-.1.600.2.300.7 1.100 1.500 1.800 1 .9 1.800 1.200 2.100 1.300.3.100.4.100.6-.1.200-.2.700-.8.900-1.100.2-.3.400-.2.600-.1l1.900.9c.3.100.5.200.5.300.1.100.1.600-.1 1.200z"/></svg></a>
+<button class="fab fab-top" id="toTop" aria-label="Retour en haut"><svg viewBox="0 0 24 24" fill="none" stroke="#f0f4ff" stroke-width="2.200"><polyline points="6 15 12 9 18 15"/></svg></button>
+
+<script>
+(function(){
+  var burger = document.getElementById('burger'), links = document.getElementById('navLinks');
+  function closeMenu(){ links.classList.remove('open'); burger.setAttribute('aria-expanded','false'); }
+  burger.addEventListener('click', function(){ var o = links.classList.toggle('open'); burger.setAttribute('aria-expanded', o ? 'true' : 'false'); });
+  links.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+
+  var progress = document.getElementById('progress'), toTop = document.getElementById('toTop');
+  var navAnchors = Array.prototype.slice.call(links.querySelectorAll('a[href^="#"]'));
+  var sections = navAnchors.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    toTop.classList.toggle('show', window.scrollY > 600);
+    var cur = -1, y = window.scrollY + 120;
+    sections.forEach(function(sec, i){ if(sec && sec.offsetTop <= y) cur = i; });
+    navAnchors.forEach(function(a, i){ a.classList.toggle('active', i === cur && !a.classList.contains('nav-cta')); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  toTop.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+  var form = document.getElementById('contactForm'), status = document.getElementById('formStatus');
+  var EMAIL = 'alassane.bousso@yahoo.com', WA = '33636383378';
+  function val(id){ return form.elements[id].value.trim(); }
+  function check(){
+    var ok = true;
+    ['prenom','nom','email','message'].forEach(function(id){ form.elements[id].classList.remove('invalid'); });
+    ['prenom','nom','message'].forEach(function(id){ if(!val(id)){ form.elements[id].classList.add('invalid'); ok = false; } });
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('email'))){ form.elements.email.classList.add('invalid'); ok = false; }
+    status.className = 'form-status' + (ok ? '' : ' err');
+    status.textContent = ok ? '' : 'Merci de compléter les champs en rouge (email valide requis).';
+    return ok;
+  }
+  function body(){
+    return 'Bonjour,\n\nJe souhaite vous contacter pour un projet.\n\nNom : ' + val('prenom') + ' ' + val('nom') + '\nEmail : ' + val('email') + '\nType de projet : ' + (val('projet') || 'Non précisé') + '\n\nDescription :\n' + val('message');
+  }
+  function open(url){ var a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); }
+  form.addEventListener('submit', function(e){
+    e.preventDefault(); if(!check()) return;
+    var subject = 'Demande de projet – ' + (val('projet') || 'B-Engineering'), b = body();
+    var su = encodeURIComponent(subject), bd = encodeURIComponent(b);
+    var box = document.getElementById('mailFallback'); box.innerHTML = '';
+    var lead = document.createElement('p'); lead.textContent = 'Choisissez comment envoyer votre message :'; box.appendChild(lead);
+    function link(label, href){ var a = document.createElement('a'); a.className = 'btn btn-outline'; a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.textContent = label; box.appendChild(a); }
+    link('Ma messagerie', 'mailto:' + EMAIL + '?subject=' + su + '&body=' + bd);
+    link('Gmail', 'https://mail.google.com/mail/?view=cm&fs=1&to=' + EMAIL + '&su=' + su + '&body=' + bd);
+    link('Yahoo Mail', 'https://compose.mail.yahoo.com/?to=' + EMAIL + '&subject=' + su + '&body=' + bd);
+    var cp = document.createElement('button'); cp.type = 'button'; cp.className = 'btn btn-outline'; cp.textContent = 'Copier le message';
+    cp.addEventListener('click', function(){
+      var txt = 'À : ' + EMAIL + '\nObjet : ' + subject + '\n\n' + b;
+      try { navigator.clipboard.writeText(txt).then(function(){ cp.textContent = 'Copié ✓'; }, function(){ cp.textContent = 'Copie impossible'; }); } catch(err){ cp.textContent = 'Copie impossible'; }
+    });
+    box.appendChild(cp); box.hidden = false;
+    status.className = 'form-status ok'; status.textContent = 'Message prêt : choisissez votre messagerie ci-dessous.';
+  });
+  document.getElementById('waBtn').addEventListener('click', function(){
+    if(!check()) return;
+    open('https://wa.me/' + WA + '?text=' + encodeURIComponent(body()));
+    status.className = 'form-status ok'; status.textContent = 'WhatsApp s’ouvre avec votre message prêt à envoyer.';
+  });
+})();
+</script>
+<script>
+  (function(){
+    // Disable custom cursor on touch devices
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if(isTouch) document.body.classList.add('touch-device');
+    
+    // Cursor animation only on non-touch
+    if(!isTouch){
+      const dot = document.getElementById('cursorDot');
+      const ring = document.getElementById('cursorRing');
+      let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+      document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+      function animateCursor(){
+        dot.style.left = mouseX + 'px'; dot.style.top = mouseY + 'px';
+        ringX += (mouseX - ringX) * 0.12;
+        ringY += (mouseY - ringY) * 0.12;
+        ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px';
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+      const interactive = document.querySelectorAll('a, button, .service-card, .team-card, .sw-item, .btn');
+      interactive.forEach(el => {
+        el.addEventListener('mouseenter', () => { ring.style.width = '54px'; ring.style.height = '54px'; ring.style.borderColor = 'var(--orange)'; dot.style.opacity = '0'; });
+        el.addEventListener('mouseleave', () => { ring.style.width = '34px'; ring.style.height = '34px'; ring.style.borderColor = 'var(--electric)'; dot.style.opacity = '1'; });
+      });
+    }
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e){
+        const targetId = this.getAttribute('href');
+        if(targetId === '#') return;
+        const targetElem = document.querySelector(targetId);
+        if(targetElem){
+          e.preventDefault();
+          targetElem.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+    
+    // Intersection Observer for reveals
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -20px 0px" });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  })();
+</script>
+</body>
+</html>

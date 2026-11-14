@@ -456,6 +456,14 @@
   input.invalid, textarea.invalid { border-color: #ff8a65 !important; }
   a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--electric2); outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .reveal { transition: none; } }
+  .hero { isolation: isolate; }
+  #mesh { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+  .brand { font-weight: 600; color: var(--white); white-space: nowrap; }
+  .brand span { color: var(--orange); }
+  .service-card { position: relative; overflow: hidden; }
+  .service-card::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.3s; background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(232,98,26,0.16), transparent 60%); }
+  .service-card:hover::after { opacity: 1; }
+  @media print { #mesh { display: none; } }
   @media print { .nav, .fab, .form-actions .btn-wa { display: none !important; } }
 </style>
 </head>
@@ -483,6 +491,7 @@
 <main>
   <!-- HERO -->
   <section class="hero" aria-label="Présentation B-Engineering">
+    <canvas id="mesh" aria-hidden="true"></canvas>
     <div class="hero-tag">
       <span><span class="dot"></span> Bureau d'études · Dakar, Sénégal</span>
     </div>
@@ -521,8 +530,8 @@
     <div class="about-text">
       <div class="section-label reveal">À propos de B-Engineering</div>
       <h2 id="about-title" class="section-title reveal">Une ingénierie<br>dédiée aux<br><span style="color:var(--orange)">structures</span></h2>
-      <p class="reveal"><strong>B-Engineering</strong> est un bureau d'études techniques basé à Dakar, porté par une ambition claire : offrir une ingénierie de structures de haut niveau au Sénégal.</p>
-      <p class="reveal">Jeune par son immatriculation, B-Engineering s’appuie en réalité sur des fondateurs au parcours d’excellence : formation d’ingénieur entre l’École Supérieure Polytechnique de Dakar, l’Université Cheikh Anta Diop et l’École Centrale de Lyon, complétée par une expérience terrain solide, acquise en France et au Sénégal.</p>
+      <p class="reveal"><span class="brand"><span>B</span>-Engineering</span> est un bureau d'études techniques basé à Dakar, porté par une ambition claire : offrir une ingénierie de structures de haut niveau au Sénégal.</p>
+      <p class="reveal">Jeune par son immatriculation, <span class="brand"><span>B</span>-Engineering</span> s’appuie en réalité sur des fondateurs au parcours d’excellence : formation d’ingénieur entre l’École Supérieure Polytechnique de Dakar, l’Université Cheikh Anta Diop et l’École Centrale de Lyon, complétée par une expérience terrain solide, acquise en France et au Sénégal.</p>
       <div class="norms reveal">
         <span class="norm-badge">Eurocodes</span>
         <span class="norm-badge">RCC-CW</span>
@@ -584,9 +593,9 @@
   <!-- CONTACT -->
   <section class="contact" id="contact" aria-labelledby="contact-title">
     <div class="contact-inner">
-      <div><div class="section-label reveal">Travaillons ensemble</div><h2 id="contact-title" class="section-title reveal">Démarrons<br>votre <span style="color:var(--orange)">projet</span></h2><p class="reveal">Maîtres d'ouvrage, architectes, entreprises — B-Engineering est votre partenaire technique.</p>
+      <div><div class="section-label reveal">Travaillons ensemble</div><h2 id="contact-title" class="section-title reveal">Démarrons<br>votre <span style="color:var(--orange)">projet</span></h2><p class="reveal">Maîtres d'ouvrage, architectes, entreprises — <span class="brand"><span>B</span>-Engineering</span> est votre partenaire technique.</p>
       <div class="contact-info reveal">
-        <div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-label">Email</div><div class="ci-value"><a href="mailto:alassane.bousso@yahoo.com">alassane.bousso@yahoo.com</a></div></div></div>
+        <div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-label">Email</div><div class="ci-value"><a href="mailto:bengexpertise@gmail.com">bengexpertise@gmail.com</a></div></div></div>
         <div class="ci-item"><div class="ci-icon">💬</div><div><div class="ci-label">WhatsApp</div><div class="ci-value"><a href="https://wa.me/33636383378" target="_blank" rel="noopener">+33 6 36 38 33 78</a></div></div></div>
         <div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-label">Téléphone (Sénégal)</div><div class="ci-value">+221 77 842 52 51</div></div></div>
         <div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Adresse</div><div class="ci-value">Parcelles Assainies 5085 — Dakar, Sénégal</div></div></div>
@@ -611,6 +620,56 @@
 
 <script>
 (function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cv = document.getElementById('mesh'), hero = cv && cv.parentNode;
+  if(cv && cv.getContext){
+    var ctx = cv.getContext('2d'), W = 0, H = 0, nodes = [], mouse = { x: -999, y: -999 }, run = true, raf = 0;
+    function size(){
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = hero.clientWidth; H = hero.clientHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var n = Math.max(28, Math.min(90, Math.round(W * H / 16000))); nodes = [];
+      for(var i = 0; i < n; i++) nodes.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35, o: Math.random() < 0.18 });
+    }
+    function frame(){
+      ctx.clearRect(0, 0, W, H); var L = Math.min(150, W / 5);
+      for(var i = 0; i < nodes.length; i++){
+        var a = nodes[i];
+        if(!reduce){ a.x += a.vx; a.y += a.vy; if(a.x < 0 || a.x > W) a.vx *= -1; if(a.y < 0 || a.y > H) a.vy *= -1; }
+        var dx = a.x - mouse.x, dy = a.y - mouse.y, d = Math.sqrt(dx * dx + dy * dy);
+        if(d < 160 && d > 0 && !reduce){ a.x += dx / d * 0.8; a.y += dy / d * 0.8; }
+        for(var j = i + 1; j < nodes.length; j++){
+          var b = nodes[j], ex = a.x - b.x, ey = a.y - b.y, e = Math.sqrt(ex * ex + ey * ey);
+          if(e < L){ ctx.strokeStyle = 'rgba(26,157,232,' + (0.22 * (1 - e / L)) + ')'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+        }
+        if(d < 190){ ctx.strokeStyle = 'rgba(232,98,26,' + (0.5 * (1 - d / 190)) + ')'; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke(); }
+        ctx.fillStyle = a.o ? 'rgba(232,98,26,0.9)' : 'rgba(120,190,240,0.65)'; ctx.beginPath(); ctx.arc(a.x, a.y, a.o ? 2.6 : 1.8, 0, 6.283); ctx.fill();
+      }
+      if(run && !reduce) raf = requestAnimationFrame(frame);
+    }
+    function start(){ cancelAnimationFrame(raf); run = true; frame(); }
+    size(); start();
+    window.addEventListener('resize', function(){ size(); if(reduce) frame(); });
+    hero.addEventListener('pointermove', function(e){ var r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+    hero.addEventListener('pointerleave', function(){ mouse.x = mouse.y = -999; });
+    if('IntersectionObserver' in window) new IntersectionObserver(function(en){ if(en[0].isIntersecting){ if(!run) start(); } else { run = false; } }).observe(hero);
+  }
+  document.querySelectorAll('.metric-num').forEach(function(el){
+    var t = el.firstChild, m = t && t.textContent.match(/^(\d+)(.*)$/);
+    if(!m || reduce || !('IntersectionObserver' in window)) return;
+    var target = parseInt(m[1], 10), suffix = m[2]; t.textContent = '0' + suffix;
+    var io = new IntersectionObserver(function(en){
+      if(!en[0].isIntersecting) return; io.disconnect(); var t0 = null;
+      (function step(ts){ if(!t0) t0 = ts; var p = Math.min((ts - t0) / 1400, 1); t.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + suffix; if(p < 1) requestAnimationFrame(step); })(performance.now());
+    }, { threshold: 0.6 });
+    io.observe(el);
+  });
+  document.querySelectorAll('.service-card').forEach(function(c){
+    c.addEventListener('pointermove', function(e){ var r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
+  });
+})();
+</script>
+<script>
+(function(){
   var burger = document.getElementById('burger'), links = document.getElementById('navLinks');
   function closeMenu(){ links.classList.remove('open'); burger.setAttribute('aria-expanded','false'); }
   burger.addEventListener('click', function(){ var o = links.classList.toggle('open'); burger.setAttribute('aria-expanded', o ? 'true' : 'false'); });
@@ -631,7 +690,7 @@
   toTop.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
   var form = document.getElementById('contactForm'), status = document.getElementById('formStatus');
-  var EMAIL = 'alassane.bousso@yahoo.com', WA = '33636383378';
+  var EMAIL = 'bengexpertise@gmail.com', WA = '33636383378';
   function val(id){ return form.elements[id].value.trim(); }
   function check(){
     var ok = true;
